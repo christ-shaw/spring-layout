@@ -40,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests().antMatchers("/","/favicon","/resources/**","/sign-up").permitAll()
                 .and()
+                .authorizeRequests().antMatchers("/console/**").permitAll().
+                and()
                 .formLogin().loginPage("/sign-in").permitAll().failureUrl("/login?error=1").loginProcessingUrl("/authenticate")
                 .and().
                 logout().
@@ -50,5 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .rememberMe()
 //                .rememberMeServices(rememberMeServices())
 //                .key("remember-me-key");
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
     }
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class Account implements Serializable
 {
     @Id
@@ -36,4 +38,11 @@ public class Account implements Serializable
     private String role = "ROLE_USER";
 
     private Instant created;
+
+    public Account(String email, String password, String role_user) {
+        this.email = email;
+        this.password = password;
+        this.role = role_user;
+        this.created = Instant.now();
+    }
 }
