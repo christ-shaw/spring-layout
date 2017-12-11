@@ -22,7 +22,7 @@
         <fieldset>
             <legend>Please sign up</legend>
             <div class="form-group" th:classappend="${#fields.hasErrors('${signupForm.email}')}? 'has-error'">
-                <label for="email" th:text="#{notBlank.message}" class="col-lg-2 control-label">Email</label>
+                <label for="email" th:text="Email" class="col-lg-2 control-label">Email</label>
                 <div class="col-lg-10">
                     <input type="text" class="form-control" id="email" placeholder="Email address"
                            th:field="${signupForm.email}"/>

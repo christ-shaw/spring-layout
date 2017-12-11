@@ -5,8 +5,11 @@ import com.ztev.springlayout.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,11 +36,12 @@ public class AccountService implements UserDetailsService {
     PasswordEncoder encoder;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = new User("admin","password", Collections.singleton(createAuthority()));
-
-
-        return user;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = repository.findOneByEmail(username);
+        if(account == null) {
+            throw new UsernameNotFoundException("user not found");
+        }
+        return createUser(account);
 
     }
 
@@ -48,6 +52,17 @@ public class AccountService implements UserDetailsService {
         return account;
     }
 
+    public void signin(Account account) {
+        SecurityContextHolder.getContext().setAuthentication(authenticate(account));
+    }
+
+    private Authentication authenticate(Account account) {
+        return new UsernamePasswordAuthenticationToken(createUser(account), null, Collections.singleton(createAuthority()));
+    }
+
+    private User createUser(Account account) {
+        return new User(account.getEmail(), account.getPassword(), Collections.singleton(createAuthority()));
+    }
 
     private GrantedAuthority createAuthority() {
        return new SimpleGrantedAuthority("role_admin");

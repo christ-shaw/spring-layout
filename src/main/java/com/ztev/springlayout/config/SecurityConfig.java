@@ -38,11 +38,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
-                authorizeRequests().antMatchers("/","/favicon","/resources/**","/sign-up").permitAll()
+                authorizeRequests().antMatchers("/","/favicon","/webjars/**","/signup","/signin","/css/**","/js/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers("/console/**").permitAll().
-                and()
-                .formLogin().loginPage("/sign-in").permitAll().failureUrl("/login?error=1").loginProcessingUrl("/authenticate")
+                .authorizeRequests().antMatchers("/console/**").permitAll()
+                 .anyRequest().authenticated()
+                .and()
+                .formLogin().loginPage("/signin").permitAll().failureUrl("/signin?error=1").loginProcessingUrl("/authenticate")
                 .and().
                 logout().
                  logoutUrl("/logout")
